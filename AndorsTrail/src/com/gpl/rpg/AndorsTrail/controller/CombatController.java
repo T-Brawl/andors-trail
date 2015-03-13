@@ -173,6 +173,7 @@ public final class CombatController implements VisualEffectCompletedCallback {
 			startAttackEffect(attack, attackPosition, this, CALLBACK_PLAYERATTACK);
 		} else {
 			combatActionListeners.onPlayerAttackMissed(target, attack);
+			startMissedEffect(attack, attackPosition, this, CALLBACK_PLAYERATTACK);
 			playerAttackCompleted();
 		}
 	}
@@ -393,6 +394,7 @@ public final class CombatController implements VisualEffectCompletedCallback {
 			startAttackEffect(attack, world.model.player.position, this, CALLBACK_MONSTERATTACK);
 		} else {
 			combatActionListeners.onMonsterAttackMissed(currentActiveMonster, attack);
+			startMissedEffect(attack, world.model.player.position, this, CALLBACK_MONSTERATTACK);
 
 			waitForNextMonsterAction();
 		}
@@ -431,6 +433,20 @@ public final class CombatController implements VisualEffectCompletedCallback {
 				, callback
 				, callbackValue);
 	}
+	
+	private void startMissedEffect(AttackResult attack, final Coord position, VisualEffectCompletedCallback callback, int callbackValue) {
+		if (controllers.preferences.attackspeed_milliseconds <= 0) {
+			callback.onVisualEffectCompleted(callbackValue);
+			return;
+		}
+		controllers.effectController.startEffect(
+				position
+				, VisualEffectCollection.VisualEffectID.miss
+				, attack.damage
+				, callback
+				, callbackValue);
+	}
+	
 	private void endMonsterTurn() {
 		currentActiveMonster = null;
 		newPlayerTurn(false);
