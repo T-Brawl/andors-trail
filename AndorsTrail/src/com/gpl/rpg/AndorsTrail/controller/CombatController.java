@@ -174,7 +174,6 @@ public final class CombatController implements VisualEffectCompletedCallback {
 		} else {
 			combatActionListeners.onPlayerAttackMissed(target, attack);
 			startMissedEffect(attack, attackPosition, this, CALLBACK_PLAYERATTACK);
-			playerAttackCompleted();
 		}
 	}
 
